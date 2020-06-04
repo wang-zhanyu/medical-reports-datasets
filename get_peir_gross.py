@@ -2,6 +2,8 @@ import os
 import requests
 import csv
 import json
+import random
+import numpy
 from bs4 import BeautifulSoup
 from PIL import Image
 requests.adapters.DEFAULT_RETRIES = 5
@@ -194,22 +196,23 @@ for url in categories_urls:
 		print("Extracted", image_sum, "image-caption pairs from the", category_soup.find("li", class_="selected").find("a").get_text(), "category")
 	print('Finished {}'.format(url))
 
-# with open("peir_gross/peir_gross.tsv", "w") as output_file:
-# 	for image in image_captions:
-# 		output_file.write(image + "\t" + image_captions[image])
-# 		output_file.write("\n")
-#
-# print("Wrote all", len(image_captions), "image-caption pairs to tsv.")
-#
-# # split to train and test
-# random.seed(42)
-# keys = list(image_captions.keys())
-# random.shuffle(keys)
-#
-# train_split = int(numpy.floor(len(image_captions) * 0.9))
-#
-# train_keys = keys[:train_split]
-# test_keys = keys[train_split:]
-#
-# split_images(image_captions, train_keys, "peir_gross/train_images.tsv")
-# split_images(image_captions, test_keys, "peir_gross/test_images.tsv")
+
+with open("peir_gross/peir_gross.tsv", "w") as output_file:
+	for image in image_captions:
+		output_file.write(image + "\t" + image_captions[image])
+		output_file.write("\n")
+
+print("Wrote all", len(image_captions), "image-caption pairs to tsv.")
+
+# split to train and test
+random.seed(42)
+keys = list(image_captions.keys())
+random.shuffle(keys)
+
+train_split = int(numpy.floor(len(image_captions) * 0.9))
+
+train_keys = keys[:train_split]
+test_keys = keys[train_split:]
+
+split_images(image_captions, train_keys, "peir_gross/train_images.tsv")
+split_images(image_captions, test_keys, "peir_gross/test_images.tsv")
